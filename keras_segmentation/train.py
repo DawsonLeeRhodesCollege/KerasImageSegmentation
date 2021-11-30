@@ -6,9 +6,12 @@ from .data_utils.data_loader import image_segmentation_generator, \
 import six
 from keras.callbacks import Callback
 from tensorflow.keras.callbacks import ModelCheckpoint
+import segmentation_models as sm
 import tensorflow as tf
 import glob
 import sys
+
+my_metrics = [tf.keras.metrics.BinaryAccuracy(), tf.keras.metrics.AUC(), sm.metrics.FScore()]
 
 def find_latest_checkpoint(checkpoints_path, fail_safe=True):
 
@@ -118,7 +121,7 @@ def train(model,
 
         model.compile(loss=loss_k,
                       optimizer=optimizer_name,
-                      metrics=['accuracy'])
+                      metrics=my_metrics)
 
     if checkpoints_path is not None:
         config_file = checkpoints_path + "_config.json"
